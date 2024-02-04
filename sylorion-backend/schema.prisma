@@ -1,0 +1,28 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root:@localhost:3306/factures"
+}
+
+model User {
+  id       Int       @id @default(autoincrement())
+  username String
+  password String
+  factures Facture[]
+}
+
+model Facture {
+  id           Int      @id @default(autoincrement())
+  articles     String
+  prices       String
+  buyerName    String
+  buyerAddress String
+  buyerPhone   String
+  userId       Int
+  user         User     @relation(fields: [userId], references: [id])
+  createdAt    DateTime @default(now())
+}
