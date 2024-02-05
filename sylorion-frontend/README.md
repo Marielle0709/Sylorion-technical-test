@@ -38,3 +38,16 @@ Bienvenue dans l'application frontend de SYLORION. Cette application est constru
     This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 ## builder le projet avec maven
     mvn clean install
+
+Étape 1: Construire l'image Docker
+
+Placez le Dockerfile dans le répertoire racine de votre projet React. Ensuite, ouvrez un terminal et exécutez la commande suivante dans le répertoire où se trouve votre Dockerfile :
+
+bash
+## lancer avec Docker
+ 
+ creer l'image docker:
+docker build -t nom_de_votre_image .
+
+executer le conteneur 
+docker run -p 3000:3000 nom_de_votre_image
