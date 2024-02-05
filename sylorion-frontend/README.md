@@ -36,3 +36,5 @@ Bienvenue dans l'application frontend de SYLORION. Cette application est constru
     Assurez-vous que le backend est en cours d'exécution à l'adresse spécifiée dans le fichier .env. Par défaut, l'application frontend suppose que le backend est accessible sur http://localhost:3001.# Getting Started with Create React App
 
     This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## builder le projet avec maven
+    mvn clean install
