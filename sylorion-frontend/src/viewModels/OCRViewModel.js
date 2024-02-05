@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { sendOcrData } from '../services/apiService';
+import { apiService, sendOcrData } from '../services/apiService';
 import Tesseract from 'tesseract.js';
-
 const OCRViewModel = () => {
   const [extractedData, setExtractedData] = useState({
     articles: [],
@@ -49,6 +48,14 @@ const OCRViewModel = () => {
       setError('Une erreur s\'est produite lors de l\'OCR.');
     } finally {
       setLoading(false);
+    }
+  };
+   const sendOcrData = async (data) => {
+    try {
+      const response = await apiService.post('/api/facture', data);
+      return response.data;
+    } catch (error) {
+      throw error;
     }
   };
 

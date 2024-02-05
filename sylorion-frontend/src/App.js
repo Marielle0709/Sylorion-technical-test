@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import OCRComponent from "./components/OCR/OCRComponent.js";
-import Login from "./form/Login.js";
+import Login from "./components/form/Login.js";
 
 function App() {
   return (

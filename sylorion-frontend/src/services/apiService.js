@@ -1,16 +1,9 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:3001'; 
+const API_BASE_URL =process.env.REACT_APP_API_URL; 
 
-const apiService = axios.create({
+export const apiService = axios.create({
   baseURL: API_BASE_URL,
 });
 
-export const sendOcrData = async (data) => {
-  try {
-    const response = await apiService.post('/api/facture', data);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
+

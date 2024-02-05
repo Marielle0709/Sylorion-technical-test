@@ -1,37 +1,31 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import AuthViewModel from "../viewModels/AuthViewModel";
 
 const Login = () => {
-  const navigate= useNavigate();
+  const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-    
-    
+
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://localhost:3001/api/login", {
-        username,
-        password,
-      });
+      const result = await AuthViewModel.login(username, password);
 
-      const result = response.data;
       console.log(result);
       if (result.userId) {
-        localStorage.setItem("userid",result.userId)
-        localStorage.setItem("username",result.username)
+        localStorage.setItem("userid", result.userId);
+        localStorage.setItem("username", result.username);
         navigate("/factures");
       } else {
         setErrorMessage(result.message);
       }
     } catch (error) {
-      console.error("Erreur lors de la connexion :", error);
-      setErrorMessage("Une erreur s'est produite lors de la connexion.");
+      setErrorMessage(error.message);
     }
   };
-
   return (
     <div
       style={{
@@ -80,8 +74,8 @@ const Login = () => {
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
-            marginTop:"1em",
-            marginBottom:"1em"
+            marginTop: "1em",
+            marginBottom: "1em",
           }}
         >
           <label htmlFor="password">Mot de passe:</label>
@@ -96,7 +90,17 @@ const Login = () => {
           />
         </div>
 
-        <button type="button" style={{background:"blue",color:"white",width:"50%",height:"25px",borderRadius:"15px"}} onClick={handleLogin}>
+        <button
+          type="button"
+          style={{
+            background: "blue",
+            color: "white",
+            width: "50%",
+            height: "25px",
+            borderRadius: "15px",
+          }}
+          onClick={handleLogin}
+        >
           Connexion
         </button>
 
