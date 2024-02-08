@@ -36,11 +36,11 @@ app.post("/api/facture", async (req, res) => {
     // Insérez les données dans la base de données via Prisma
     await prisma.facture.create({
       data: {
-        articles: JSON.stringify(articles),
-        prices: JSON.stringify(prices),
-        buyerName: buyer.firstName + " " + buyer.lastName,
-        buyerAddress: buyer.address,
-        buyerPhone: buyer.phoneNumber,
+        articles: JSON.stringify(articles)|"",
+        prices: JSON.stringify(prices)|"",
+        buyerName: buyer.firstName + " " + buyer.lastName|"",
+        buyerAddress: buyer.address|"",
+        buyerPhone: buyer.phoneNumber ||"",
         userId: user.id,
       },
     });
