@@ -17,12 +17,13 @@ model User {
 
 model Facture {
   id           Int      @id @default(autoincrement())
-  articles     String
-  prices       String
+  articles     Json[]
+  prices       Json[]
   buyerName    String
   buyerAddress String
   buyerPhone   String
   userId       Int
   user         User     @relation(fields: [userId], references: [id])
-  createdAt    DateTime @default(now())
+  createdAt    DateTime
 }
+

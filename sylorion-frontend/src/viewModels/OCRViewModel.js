@@ -30,20 +30,22 @@ const OCRViewModel = () => {
       const buyerInfo = extractBuyerInfo(text);
       console.log(buyerInfo);
       const articles = extractArticles(text);
-      const prices = extractPrices(text);
+      console.log(articles);
+      const prices = articles.map(article => article.price);
+            console.log(prices);
+      // Appel de l'API pour enregistrer les données
+      await sendOcrData({
+        articles:articles,
+        prices: prices, 
+        buyer: buyerInfo,
+      });
 
       setExtractedData({
         articles,
-        prices,
+        prices: prices, // Correction ici
         buyer: buyerInfo,
       });
-      console.log("donnee setter"+extractedData);
-      // Appel de l'API pour enregistrer les données
-      await sendOcrData({
-        articles,
-        prices,
-        buyer: buyerInfo,
-      });
+
     } catch (error) {
       console.error('Erreur lors de l\'OCR :', error);
       setError('Une erreur s\'est produite lors de l\'OCR.');
@@ -60,6 +62,7 @@ const OCRViewModel = () => {
       throw error;
     }
   };
+
   const extractBuyerInfo = (text) => {
     const regexBuyerInfo = /(\w+)\s+(\w+)\s+FACTURE([\s\S]+?)Conditions et modalités de paiement/g;
     const match = regexBuyerInfo.exec(text);
@@ -86,7 +89,7 @@ const OCRViewModel = () => {
       address: '',
     };
   };
-  
+
   const extractArticles = (text) => {
     const regexArticles = /MONTANT HT([\s\S]+)$/g;
     const match = regexArticles.exec(text);
@@ -105,16 +108,9 @@ const OCRViewModel = () => {
   
     return [];
   };
-  
-  
-  
 
-  const extractPrices = (text) => {
-    const regexMontantHT = /MONTANT HT\s*(\d+\.\d{2})/g;
-    const matches = Array.from(text.matchAll(regexMontantHT));
-
-    return matches.map((match) => parseFloat(match[1]));
-  };
+ 
+  
   
   return {
     extractedData,

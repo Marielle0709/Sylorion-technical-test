@@ -36,11 +36,11 @@ app.post("/api/facture", async (req, res) => {
     // Insérez les données dans la base de données via Prisma
     await prisma.facture.create({
       data: {
-        articles: JSON.stringify(articles)|"",
-        prices: JSON.stringify(prices)|"",
-        buyerName: buyer.firstName + " " + buyer.lastName|"",
-        buyerAddress: buyer.address|"",
-        buyerPhone: buyer.phoneNumber ||"",
+        articles: JSON.stringify(articles) || "",
+        prices: JSON.stringify(prices) || "",
+        buyerName: buyer.firstName + " " + buyer.lastName,
+        buyerAddress: buyer.address,
+        buyerPhone: "335543211",
         userId: user.id,
       },
     });
@@ -72,7 +72,7 @@ app.post("/api/login", async (req, res) => {
     console.log(user);
     user.forEach((user) => {
       if (user && password === user.password) {
-        res.status(200).json({ message: "Connexion réussie", userId: user.id,username:user.username });
+        res.status(200).json({ message: "Connexion réussie", userId: user.id, username: user.username });
       } else {
         res
           .status(401)

@@ -42,9 +42,7 @@ const OCRComponent = () => {
     );
   };
 
-  const handleSendData = async () => {
-    await ocrViewModel.sendDataToApi();
-  };
+
 
   return (
     <div
