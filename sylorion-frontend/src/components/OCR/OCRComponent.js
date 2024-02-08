@@ -71,9 +71,9 @@ const OCRComponent = () => {
           <div style={{ width: '80%' }}>
             <h2>Articles :</h2>
             <ul>
-              {ocrViewModel.extractedData.articles.map((article, index) => (
-                <li key={index}>{article}</li>
-              ))}
+            {ocrViewModel.extractedData.articles.map((article, index) => (
+              <li key={index}>{article.description ? `${article.quantity} ${article.description} - ${article.price} EUR` : article}</li>
+            ))}
             </ul>
           </div>
         )}

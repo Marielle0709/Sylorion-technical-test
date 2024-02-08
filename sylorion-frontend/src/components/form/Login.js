@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import AuthViewModel from "../viewModels/AuthViewModel";
+import AuthViewModel from "../../viewModels/AuthViewModel";
 
 const Login = () => {
   const navigate = useNavigate();

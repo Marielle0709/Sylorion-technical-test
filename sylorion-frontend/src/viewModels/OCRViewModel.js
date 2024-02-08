@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { apiService, sendOcrData } from '../services/apiService';
 import Tesseract from 'tesseract.js';
+import { apiService, sendOcrData } from '../services/apiService';
+
 const OCRViewModel = () => {
   const [extractedData, setExtractedData] = useState({
     articles: [],
@@ -9,7 +10,6 @@ const OCRViewModel = () => {
       firstName: '',
       lastName: '',
       address: '',
-      phoneNumber: '',
     },
   });
   const [loading, setLoading] = useState(false);
@@ -27,16 +27,17 @@ const OCRViewModel = () => {
 
       console.log('Texte extrait :', text);
 
+      const buyerInfo = extractBuyerInfo(text);
+      console.log(buyerInfo);
       const articles = extractArticles(text);
       const prices = extractPrices(text);
-      const buyerInfo = extractBuyerInfo(text);
 
       setExtractedData({
         articles,
         prices,
         buyer: buyerInfo,
       });
-
+      console.log("donnee setter"+extractedData);
       // Appel de l'API pour enregistrer les données
       await sendOcrData({
         articles,
@@ -50,7 +51,8 @@ const OCRViewModel = () => {
       setLoading(false);
     }
   };
-   const sendOcrData = async (data) => {
+
+  const sendOcrData = async (data) => {
     try {
       const response = await apiService.post('/api/facture', data);
       return response.data;
@@ -58,61 +60,67 @@ const OCRViewModel = () => {
       throw error;
     }
   };
-
+  const extractBuyerInfo = (text) => {
+    const regexBuyerInfo = /(\w+)\s+(\w+)\s+FACTURE([\s\S]+?)Conditions et modalités de paiement/g;
+    const match = regexBuyerInfo.exec(text);
+  
+    if (match) {
+      const buyerInfoText = match[3].trim();
+  
+      // Trouver l'adresse
+      const regexAddress = /^(\d{1,5}\s+[\w\s]+)\n/;
+      const addressMatch = buyerInfoText.match(regexAddress);
+      const address = addressMatch ? addressMatch[1].trim() : '';
+  
+      return {
+        firstName: match[1],
+        lastName: match[2],
+        address,
+      };
+    }
+  
+    // Si aucune correspondance n'est trouvée, retourner un objet vide
+    return {
+      firstName: '',
+      lastName: '',
+      address: '',
+    };
+  };
+  
   const extractArticles = (text) => {
-    const regex = /\d+\.\s*([^\d\n]+)\s*(\d+\.\d{2})\s*EUR/g;
-    const matches = text.matchAll(regex);
-
-    return Array.from(matches, (match) => `${match[1].trim()} - ${match[2]} EUR`);
+    const regexArticles = /MONTANT HT([\s\S]+)$/g;
+    const match = regexArticles.exec(text);
+  
+    if (match) {
+      const articlesText = match[1].trim();
+      const regexDesignation = /(\d+)\s+([\s\S]+?)\s+(\d+\.\d{2})/g;
+      const matches = Array.from(articlesText.matchAll(regexDesignation));
+  
+      return matches.map((match) => ({
+        quantity: parseInt(match[1], 10),
+        description: match[2].trim(),
+        price: parseFloat(match[3]),
+      }));
+    }
+  
+    return [];
   };
-
-  const extractTotal = (text) => {
-    const regex = /Total:\s*(\d+\.\d{2})\s*EUR/;
-    const match = text.match(regex);
-
-    return match ? parseFloat(match[1]) : 0;
-  };
+  
+  
+  
 
   const extractPrices = (text) => {
-    const regex = /(\d+\.\d{2})\s*EUR/g;
-    const matches = [...text.matchAll(regex)];
+    const regexMontantHT = /MONTANT HT\s*(\d+\.\d{2})/g;
+    const matches = Array.from(text.matchAll(regexMontantHT));
 
     return matches.map((match) => parseFloat(match[1]));
   };
-
-  const extractBuyerInfo = (text) => {
-    const regexName = /Nom:\s*([^\n]+)/;
-    const regexAddress = /Adresse:\s*([^\n]+)/;
-    const regexPhoneNumber = /Téléphone:\s*([\d-]+)/;
-
-    const nameMatch = text.match(regexName);
-    const addressMatch = text.match(regexAddress);
-    const phoneNumberMatch = text.match(regexPhoneNumber);
-
-    return {
-      firstName: nameMatch ? nameMatch[1].split(' ')[0] : '',
-      lastName: nameMatch ? nameMatch[1].split(' ').slice(1).join(' ') : '',
-      address: addressMatch ? addressMatch[1] : '',
-      phoneNumber: phoneNumberMatch ? phoneNumberMatch[1] : '',
-    };
-  };
-
-  const sendDataToApi = async () => {
-    try {
-      await sendOcrData(extractedData);
-      alert('Données envoyées avec succès à l\'API!');
-    } catch (error) {
-      console.error('Erreur lors de l\'envoi des données à l\'API :', error);
-      alert('Erreur lors de l\'envoi des données à l\'API.');
-    }
-  };
-
+  
   return {
     extractedData,
     loading,
     error,
     performOCR,
-    sendDataToApi,
   };
 };
 

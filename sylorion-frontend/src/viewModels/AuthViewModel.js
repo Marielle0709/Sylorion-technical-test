@@ -3,7 +3,7 @@ import { apiService } from "../services/apiService";
 class AuthViewModel {
   static async login(username, password) {
     try {
-      const response = await apiService.post("/login", {
+      const response = await apiService.post("/api/login", {
         username,
         password,
       });
