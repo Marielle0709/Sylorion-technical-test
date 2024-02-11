@@ -22,23 +22,7 @@ Prisma est un outil de gestion de base de données qui simplifie les opérations
 
  ## API Endpoints
 
-    L'application expose un endpoint pour enregistrer des données de facture :
-
-        POST /api/facture
-
-        Exemple de requête :
-        {
-        "articles": ["Produit A - 10.99 EUR", "Produit C - 5.99 EUR"],
-        "prices": [10.99, 5.99],
-        "buyer": {
-            "firstName": "John",
-            "lastName": "Doe",
-            "address": "123 Main St, City",
-            "phoneNumber": "123-456-7890"
-        }
-        }
-
-        La requête enregistre la facture dans la base de données associée à un utilisateur.
+   vous pouvez visualiser et tester tous les endpoints grace a swagger-ui sur http://localhost:3001/api-docs/
         
 ## Configuration de la Base de Données
 
